@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Exercicio-02</title>
+</head>
+<body>
+    <style>
+        /*RESET*/
+*{
+    margin: 0px; 
+    padding: 0px; 
+    font-size: 10px; 
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; 
+    list-style-type: none;
+    text-decoration: none;}
+
+    #box{
+        width: 450px;
+        height: 30%;
+        background-color: rgb(105, 105, 105);
+        text-align: center;
+        margin: 50px auto;
+        border-radius: 25px;
+        border:none;
+    }
+
+    #box h1{
+        font-size:5em;
+        color: rgb(255, 255, 255);
+        padding: 5px 0;
+    }
+
+    #box form{
+        display: flex;
+        flex-direction: column;
+    }
+
+    #box form label{
+        font-size: 1.8em;
+        color: white;
+        font-weight: 500;
+        padding: 5px 0;
+    }
+
+    #box form input{
+        width: 150px;
+        text-align: justify;
+        outline: none;
+        font-size: 15px;
+        padding: 0 3px;
+    }
+
+    #box button{
+        width: 125px;
+        line-height:40px;
+        font-size: 1.8em;
+        font-weight:bold;
+        outline:none;
+        margin: 10px 0;
+        cursor:pointer;
+        border: none;
+        border-radius:10px;
+        transition: 0.15s;
+    }
+
+    button:hover{
+        transform: scale(1.1);
+        background-color: rgba(181, 207, 255, 0.849);
+        border: 2px solid black;
+    }
+
+    #resultado{
+        padding:10px 5px;
+    }
+
+    #resultado span{
+        font-size: 1.3em;
+        font-weight: bold;
+        color:white;
+    }
+
+    #resultado{
+        font-size:1.8em;
+        font-weight: 600;
+        color:white;
+    }
+    </style>
+<div id="box">
+    <h1>Vamos contar</h1>
+
+    <form>
+        <label for="inicialNumber">Numero inicial:
+            <input type="number" name="inicialNumber" id="inicialNumber">
+        </label>
+
+        <label for="finalNumber">Numero final:
+            <input type="number" name="finalNumber" id="finalNumber">
+        </label>
+
+        <label for="puloNumber">Pulo de numeros:
+            <input type="number" name="puloNumber" id="puloNumber">
+        </label>
+    </form>
+
+    <button id="calcular">Calcular</button>
+
+    <div><h2 id="resultado"></h2></div>
+</div>
+<script>//botao
+    document.getElementById('calcular').onclick = function (){calcular();}
+    //o proprio VScode me recomendou fazer esse import
+    //import { writeFileSync } from 'fs';
+    const fs = require('fs');
+
+    
+    //funções
+    function calcular(){
+    
+        let primeiroNumero = Number(document.getElementById('inicialNumber').value);
+        let ultimoNumero = Number(document.getElementById('finalNumber').value);
+        let numeroDePulo = Number(document.getElementById('puloNumber').value);
+        let resultado = document.getElementById('resultado');
+    
+        if(primeiroNumero === ""){
+            resultado.innerText += 'Por favor insira um valor valido no primeiro numero!';
+        } else if(ultimoNumero === ""){
+            resultado.innerText = 'Por favor insira um valor valido no numero final!';
+        } else if(ultimoNumero <= primeiroNumero ){
+            resultado.innerHTML = 'Os valores do ultimo numero não pode ser menor ou igual ao do numero inicial';
+        } else if(numeroDePulo === ''){
+            resultado.innerHTML = 'Por favor insira um valor valido no numero de pulos!';
+        } else if(numeroDePulo == 0){
+            numeroDePulo = 1;
+            loop();
+            agruparDados()
+        } else {
+            loop();
+            agruparDados()
+        }
+    }
+    function loop(){
+    
+        let primeiroNumero = Number(document.getElementById('inicialNumber').value);
+        let ultimoNumero = Number(document.getElementById('finalNumber').value);
+        let numeroDePulo = Number(document.getElementById('puloNumber').value);
+        let resultado = document.getElementById('resultado');
+            
+        resultado.innerHTML = "";
+        for( let i = primeiroNumero; i <= ultimoNumero; i += numeroDePulo){
+            resultado.innerHTML += `<span> ${i}, </span>`;
+        };
+    }
+    
+    function agruparDados(){ 
+    
+        let primeiroNumero = Number(document.getElementById('inicialNumber').value);
+        let ultimoNumero = Number(document.getElementById('finalNumber').value);
+        let numeroDePulo = Number(document.getElementById('puloNumber').value);
+        
+        let valoresDosresultados = [];
+    
+        let valoresDosInputs = [
+                {primeiroNumero: `${primeiroNumero}`,
+                ultimoNumero: `${ultimoNumero}`, 
+                numeroDePulo: `${numeroDePulo}`},
+            ];
+        
+        valoresDosresultados.push(valoresDosInputs);
+    
+        let valoresDeSaida = [];
+    
+        for(let i = primeiroNumero; i <= ultimoNumero; i += numeroDePulo){
+            valoresDeSaida.push(i)
+        }
+    
+        valoresDosresultados.push(valoresDeSaida)
+    
+        //essa foi a solução que achei na net
+        //let data = JSON.stringify(valoresDosresultados);
+        //fs.writeFileSync('./JS/dados', data);
+    
+        //let teste = JSON.stringify(valoresDosresultados)
+        
+        
+    
+        //let fs = require('json')
+        //fs.writeFile('dados.json', json, 'utf8', callback);
+        const readFile = () => {
+        const content = fs.readFileSync('./JS/dados.json', 'utf-8')
+        return JSON.parse(content)
+        }
+
+        const writeFile = (content) => {
+        const updateFile = JSON.stringify(content)
+        fs.writeFileSync('./JS/dados.json', updateFile, 'utf-8')
+        }   
+
+        router.post('/', (req, res) => {
+            const currentContent = readFile();
+            currentContent.push({ valoresDosresultados });
+            writeFile(currentContent);
+            res.send({ valoresDosresultados});
+            
+        })
+    }</script>
+</body>
+</html>
